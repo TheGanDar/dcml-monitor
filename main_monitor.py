@@ -139,4 +139,4 @@ if __name__ == "__main__":
     """
     Entry point for the Monitor
     """
-    main_monitor('Dataset/result_monitor.csv', 100, 1)
+    main_monitor('Dataset/result_monitor.csv', 50, 1)
