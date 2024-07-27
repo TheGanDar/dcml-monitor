@@ -5,7 +5,9 @@
 
 import csv
 import os.path
+import random
 import time
+from Fault_injection import simulate_fault
 
 import psutil
 from tqdm import tqdm
@@ -112,6 +114,11 @@ def main_monitor(out_filename : str, max_n_obs : int, obs_interval_sec : int):
 
     for obs_count in tqdm(range(max_n_obs), desc='Monitor Progress Bar'):
         start_time = time.time()
+
+        #randomly decide whether to simulate a fault
+        if random.random()< 0.2: #20% chance of fault injection
+            simulate_fault()
+
         obs = monitor_data()
 
         # Writing on the command line and as a new line of a CSV file
