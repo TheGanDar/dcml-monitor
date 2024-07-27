@@ -7,7 +7,8 @@ import csv
 import os.path
 import random
 import time
-from Script.Fault_injection import simulate_fault
+from datetime import datetime
+from Fault_injection import simulate_fault
 
 import psutil
 from tqdm import tqdm
@@ -21,7 +22,7 @@ def monitor_data():
     n_proc = psutil.cpu_count()
 
     # Adding timestamp
-    python_data['_timestamp'] = time.time()
+    python_data['timestamp'] = datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
 
     # CPU Times
     tag = 'cpu_times'
