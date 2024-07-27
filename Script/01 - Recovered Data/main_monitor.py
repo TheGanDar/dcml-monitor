@@ -117,7 +117,7 @@ def main_monitor(out_filename : str, max_n_obs : int, obs_interval_sec : int):
         start_time = time.time()
 
         #randomly decide whether to simulate a fault
-        if random.random()< 0.2: #20% chance of fault injection
+        if random.random()< 0.2: #The chance of fault injection is at most 20%
             simulate_fault()
 
         obs = monitor_data()
