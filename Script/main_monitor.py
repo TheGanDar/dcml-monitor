@@ -7,7 +7,7 @@ import csv
 import os.path
 import random
 import time
-from Fault_injection import simulate_fault
+from Script.Fault_injection import simulate_fault
 
 import psutil
 from tqdm import tqdm
@@ -146,4 +146,4 @@ if __name__ == "__main__":
     """
     Entry point for the Monitor
     """
-    main_monitor('Dataset/result_monitor.csv', 50, 1)
+    main_monitor('../Dataset/result_monitor.csv', 50, 1)
