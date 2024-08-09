@@ -8,10 +8,20 @@ import os.path
 import random
 import time
 from datetime import datetime
+from collections import Counter
 from Fault_injection import simulate_fault
+from Fault_injection import log_error
 
 import psutil
 from tqdm import tqdm
+
+#File path
+csv_file = '../../Dataset/result_monitor.csv'
+error_file = '../../Dataset/error_log.txt'
+
+#Input for monitor execution
+num_obs = 100 #maximum number of observations
+interval = 1  #Seconds in between two observations
 
 def monitor_data():
     """
@@ -95,7 +105,6 @@ def monitor_data():
 
     return python_data
 
-
 def main_monitor(out_filename : str, max_n_obs : int, obs_interval_sec : int):
     """
     Main function for monitoring
@@ -105,9 +114,12 @@ def main_monitor(out_filename : str, max_n_obs : int, obs_interval_sec : int):
     :return: no return
     """
 
-    # Checking of out_filename already exists: if yes, delete
+    # Checking of out_filename and error_log already exists: if yes, delete
     if os.path.exists(out_filename):
         os.remove(out_filename)
+
+    if os.path.exists(error_file):
+        os.remove(error_file)
 
     # Monitoring Loop
     print('Monitoring for %d times' % max_n_obs)
@@ -134,12 +146,11 @@ def main_monitor(out_filename : str, max_n_obs : int, obs_interval_sec : int):
         # Sleeping to synchronize to the obs-interval
         exe_time_s = time.time() - start_time
         sleep_s = obs_interval_sec - exe_time_s
-
         # Sleep to catch up with cycle time
         if sleep_s > 0:
             time.sleep(sleep_s)
         else:
-            print('Warning: execution of the monitor took too long (%.3f sec)' % (exe_time_s - obs_interval_sec))
+            log_error('WARNING: execution of the monitor took too long (%.3f sec)' % (exe_time_s - obs_interval_sec))
         obs_count += 1
 
 
@@ -147,4 +158,27 @@ if __name__ == "__main__":
     """
     Entry point for the Monitor
     """
-    main_monitor('../../Dataset/result_monitor.csv', 50, 1)
+    main_monitor(csv_file, num_obs, interval)
+
+    #Check any errors/warnings reported in the error_log.txt file
+    with open(error_file, 'r') as efile:
+        lines = efile.readlines()
+
+    error_messages = []
+
+    for line in lines:
+        start_index = line.find(' - ')
+        start_index += 3
+
+        end_index = line.find(':', start_index)
+
+        error_message = line[start_index:end_index].strip()
+        error_messages.append(error_message)
+
+    error_counter = Counter(error_messages)
+    if error_messages == []:
+        print('No errors/warnings were encountered while running the Monitor.')
+    else:
+        print('While running the monitor you encountered the following errors/warnings:')
+        for error, count in error_counter.items():
+            print(f'{error} - {count}')
