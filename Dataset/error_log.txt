@@ -1,0 +1,23 @@
+2024-07-30 12:53:13 - FAULT INJECTION: CPU Stats anomaly!
+2024-07-30 12:53:15 - WARNING: execution of the monitor took too long (1.260 sec)
+2024-07-30 12:53:17 - FAULT INJECTION: CPU Times spike!
+2024-07-30 12:53:19 - WARNING: execution of the monitor took too long (1.053 sec)
+2024-07-30 12:53:20 - FAULT INJECTION: CPU Times spike!
+2024-07-30 12:53:22 - WARNING: execution of the monitor took too long (1.044 sec)
+2024-07-30 12:53:27 - FAULT INJECTION: CPU Load spike!
+2024-07-30 12:53:29 - WARNING: execution of the monitor took too long (1.038 sec)
+2024-07-30 12:53:32 - FAULT INJECTION: CPU Stats anomaly!
+2024-07-30 12:53:34 - WARNING: execution of the monitor took too long (1.065 sec)
+2024-07-30 12:53:38 - FAULT INJECTION: CPU Load spike!
+2024-07-30 12:53:40 - WARNING: execution of the monitor took too long (1.061 sec)
+2024-07-30 12:53:46 - FAULT INJECTION: CPU Stats anomaly!
+2024-07-30 12:53:48 - WARNING: execution of the monitor took too long (1.042 sec)
+2024-07-30 12:54:05 - FAULT INJECTION: CPU Times spike!
+2024-07-30 12:54:07 - WARNING: execution of the monitor took too long (1.020 sec)
+2024-07-30 12:54:09 - FAULT INJECTION: CPU Stats anomaly!
+2024-07-30 12:54:11 - WARNING: execution of the monitor took too long (1.020 sec)
+2024-07-30 12:54:15 - FAULT INJECTION: Net IO stress!
+2024-07-30 12:54:17 - FAULT INJECTION: Swap Memory exhaustion!
+2024-07-30 12:54:19 - WARNING: execution of the monitor took too long (1.062 sec)
+2024-07-30 12:54:37 - FAULT INJECTION: Virtual Memory saturation!
+2024-07-30 12:54:39 - WARNING: execution of the monitor took too long (1.070 sec)
