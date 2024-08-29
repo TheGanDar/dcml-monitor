@@ -40,19 +40,19 @@ def simulate_fault():
     # Simulate faults for CPU Times
     if fault_type == 'cpu_times':
         log_error("FAULT INJECTION: CPU Times spike!")
-        end_time = time.time() + 2
+        end_time = time.time() + 10
         while time.time() < end_time:
             pass
 
     # Simulate faults for CPU Stats
     elif fault_type == 'cpu_stats':
         log_error("FAULT INJECTION: CPU Stats anomaly!")
-        time.sleep(2)
+        time.sleep(10)
 
     # Simulate faults for CPU Load
     elif fault_type == 'cpu_load':
         log_error("FAULT INJECTION: CPU Load spike!")
-        end_time = time.time() + 2
+        end_time = time.time() + 10
         while time.time() < end_time:
             pass
 
@@ -61,8 +61,8 @@ def simulate_fault():
         log_error("FAULT INJECTION: Swap Memory exhaustion!")
         a = []
         for _ in range(10 ** 6):
-            a.append(' ' * 1024)
-        time.sleep(2)
+            a.append(' ' * 2048)
+        time.sleep(10)
         del a
 
     # Simulate faults for Virtual Memory
@@ -70,25 +70,25 @@ def simulate_fault():
         log_error("FAULT INJECTION: Virtual Memory saturation!")
         a = []
         for _ in range(10 ** 6):
-            a.append(' ' * 1024)
-        time.sleep(2)
+            a.append(' ' * 2048)
+        time.sleep(10)
         del a
 
     # Simulate faults for Disk Usage
     elif fault_type == 'disk_usage':
         log_error("FAULT INJECTION: Disk Usage increase!")
         with open('temp_disk_usage.dat', 'wb') as f:
-            f.write(os.urandom(1024 * 1024 * 100))  # Write 100 MB of random data
-        time.sleep(2)
+            f.write(os.urandom(2048 * 2048 * 200))  # Write 100 MB of random data
+        time.sleep(10)
         os.remove('temp_disk_usage.dat')
 
     # Simulate faults for Disk IO
     elif fault_type == 'disk_io':
         log_error("FAULT INJECTION: Disk IO load!")
         with open('temp_disk_io.dat', 'wb') as f:
-            f.write(os.urandom(1024 * 1024 * 100))  # Write 100 MB of random data
+            f.write(os.urandom(2048 * 2048 * 200))  # Write 100 MB of random data
         with open('temp_disk_io.dat', 'rb') as f:
-            while f.read(1024 * 1024):  # Read the file in 1 MB chunks
+            while f.read(2048 * 2048):  # Read the file in 2 MB chunks
                 pass
         os.remove('temp_disk_io.dat')
 
@@ -96,38 +96,6 @@ def simulate_fault():
     elif fault_type == 'net_io':
         log_error("FAULT INJECTION: Net IO stress!")
         # Simulate network stress by performing a large data transfer
-        start_time = time.time()
         with open('temp_net_io.dat', 'wb') as f:
-            f.write(os.urandom(1024 * 1024 * 100))  # Write 100 MB of random data
-        end_time = time.time()
-        duration = end_time - start_time
+            f.write(os.urandom(2048 * 2048 * 200))  # Write 100 (...200) MB of random data
         os.remove('temp_net_io.dat')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # Simulate CPU load spike by running a busy loop
-    #if fault_type == 'cpu':
-    #    log_error("FAULT INJECTION: CPU load spike!")
-    #    end_time = time.time() + 2  # 2 seconds spike
-    #    while time.time() < end_time:
-    #        pass
-#
-    ## Simulate memory saturation
-    #elif fault_type == 'memory':
-    #    log_error("FAULT INJECTION: memory saturation!")
-    #    a = []
-    #    for _ in range(10 ** 6):
-    #        a.append(' ' * 1024)  # Allocate 1MB blocks
-    #    del a  # Release memory

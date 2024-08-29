@@ -20,7 +20,7 @@ csv_file = '../../Dataset/result_monitor.csv'
 error_file = '../../Dataset/error_log.txt'
 
 #Input for monitor execution
-num_obs = 100 #maximum number of observations
+num_obs = 50 #maximum number of observations
 interval = 1  #Seconds in between two observations
 
 def monitor_data():
@@ -123,7 +123,6 @@ def main_monitor(out_filename : str, max_n_obs : int, obs_interval_sec : int):
 
     # Monitoring Loop
     print('Monitoring for %d times' % max_n_obs)
-    obs_count = 0
 
     for obs_count in tqdm(range(max_n_obs), desc='Monitor Progress Bar'):
         start_time = time.time()
