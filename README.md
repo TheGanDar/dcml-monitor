@@ -9,7 +9,7 @@ Before you begin, ensure you have met the following requirements:
 + **Python3**
 + **Pandas library**
 + **Sklearn library**
-+ **Pyod library** (for import HBOS Algorithm)
++ **PyOD library** (for import HBOS Algorithm)
 
 
 ## Libraries Installing 
