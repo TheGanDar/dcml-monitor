@@ -15,9 +15,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 from sklearn.cluster import DBSCAN
 from sklearn.neighbors import KNeighborsClassifier
 from pyod.models.hbos import HBOS
-#from sklearn.decomposition import PCA
 
-# Elenca tutti i file nella directory con estensione .pkl
 def delete_pkl_file(pkl_directory):
     """
     Function to delete all files in the 'Dataset' directory with .pkl exstension.
@@ -66,14 +64,6 @@ def model_selection(path_csv_file, path_pkl_directory):
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=35)
     else:
         X_train, X_test, y_train, y_test = X, X, y, y
-
-    #X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=35)
-
-    # Riduzione dimensionale con PCA
-    #num_components = min(X_train.shape[1], X_train.shape[0] - 1)
-    #pca = PCA(n_components=num_components)  # Riduci di una dimensione per evitare la non invertibilità
-    #X_train_reduced = pca.fit_transform(X_train)
-    #X_test_reduced = pca.transform(X_test)
 
     #Standardization
     scaler = StandardScaler()
@@ -174,20 +164,9 @@ def anomaly_detection_prediction(path_csv_file, path_pkl_directory):
                  'net_io.bytes_recv', 'net_io.packets_sent', 'net_io.packets_recv',
                  'net_io.errin', 'net_io.errout', 'net_io.dropin', 'net_io.dropout']].values.reshape(1, -1)
 
-        # Riduzione dimensionale con PCA (deve essere consistente con il preprocessing precedente)
-        num_components = min(X.shape[1], X.shape[0] - 1)
-        if (num_components != 0) & (1==2):
-            pca = PCA(n_components=num_components)
-            X_reduced = pca.fit_transform(X)
-            scaler = StandardScaler()
-            X_scaled = scaler.fit_transform(X_reduced)
-        else:
-            scaler = StandardScaler()
-            X_scaled = scaler.fit_transform(X)
-
         # Standardization
-        #scaler = StandardScaler()
-        #X_scaled = scaler.fit_transform(X)
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(X)
 
         # Prediction
         if isinstance(best_model, DBSCAN):

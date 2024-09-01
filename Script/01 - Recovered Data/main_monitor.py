@@ -167,7 +167,7 @@ if __name__ == "__main__":
     pkl_directory = '../../Dataset'
 
     # Input for monitor execution
-    num_obs = 1000  # maximum number of observations
+    num_obs = 100  # maximum number of observations
     interval = 1  # Seconds in between two observations
 
     main_monitor(csv_file, num_obs, interval)
