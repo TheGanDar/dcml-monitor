@@ -1,27 +1,23 @@
 # DATA COLLECTION AND MACHINE LEARNING
 # FOR CRITICAL CYBER-PHYSICAL SYSTEMS project
-# Name: Dario
+# Name: Dario Gangemi
+# Student ID: 7062188
 # A.A: 2023/2024
 
+import sys
 import csv
 import os.path
 import random
 import time
 from datetime import datetime
 from collections import Counter
-from Fault_injection import simulate_fault
-from Fault_injection import log_error
-
 import psutil
 from tqdm import tqdm
+from multiprocessing import Process
 
-#File path
-csv_file = '../../Dataset/result_monitor.csv'
-error_file = '../../Dataset/error_log.txt'
-
-#Input for monitor execution
-num_obs = 50 #maximum number of observations
-interval = 1  #Seconds in between two observations
+from Fault_injection import simulate_fault, log_error
+sys.path.append(os.path.abspath("../02 - Data Analysis"))
+from Analysis_Model import model_selection, delete_pkl_file
 
 def monitor_data():
     """
@@ -29,7 +25,6 @@ def monitor_data():
     :return: a dictionary containing couples <indicator, value>
     """
     python_data = {}
-    n_proc = psutil.cpu_count()
 
     # Adding timestamp
     python_data['timestamp'] = datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
@@ -105,6 +100,7 @@ def monitor_data():
 
     return python_data
 
+
 def main_monitor(out_filename : str, max_n_obs : int, obs_interval_sec : int):
     """
     Main function for monitoring
@@ -114,31 +110,39 @@ def main_monitor(out_filename : str, max_n_obs : int, obs_interval_sec : int):
     :return: no return
     """
 
-    # Checking of out_filename and error_log already exists: if yes, delete
     if os.path.exists(out_filename):
         os.remove(out_filename)
 
     if os.path.exists(error_file):
         os.remove(error_file)
 
-    # Monitoring Loop
-    print('Monitoring for %d times' % max_n_obs)
+    process = None  # Initialize process for model_selection function
 
     for obs_count in tqdm(range(max_n_obs), desc='Monitor Progress Bar'):
         start_time = time.time()
 
-        #randomly decide whether to simulate a fault
-        if random.random()< 0.2: #The chance of fault injection is at most 20%
+        # Randomly decide whether to simulate a fault (the chance of fault injection is at most 20%)
+        if random.random()< 0.2:
             simulate_fault()
 
         obs = monitor_data()
+        anomaly_detected = False
+
+        # If a possible anomaly is found, the choice of the analysis model is launched in parallel
+        if obs.get('cpu_load.load_1m', 0) > 0.10:
+            anomaly_detected = True
+            if process is None or not process.is_alive():
+                process = Process(target=model_selection, args=(csv_file, pkl_directory,))
+                process.start()
+
+        obs['analysis.possible_anomaly'] = '***' if anomaly_detected else ''
+        obs['analysis.prediction_result'] = '***' if anomaly_detected else ''
+        obs['analysis.used_model'] = '***' if anomaly_detected else ''
 
         # Writing on the command line and as a new line of a CSV file
         with open(out_filename, "a", newline="") as csvfile:
-            # Create a CSV writer using the field/column names
             writer = csv.DictWriter(csvfile, fieldnames=obs.keys())
             if obs_count == 0:
-                # Write the header row (column names)
                 writer.writeheader()
             writer.writerow(obs)
 
@@ -152,11 +156,20 @@ def main_monitor(out_filename : str, max_n_obs : int, obs_interval_sec : int):
             log_error('WARNING: execution of the monitor took too long (%.3f sec)' % (exe_time_s - obs_interval_sec))
         obs_count += 1
 
-
 if __name__ == "__main__":
     """
     Entry point for the Monitor
     """
+
+    # File path
+    csv_file = '../../Dataset/result_monitor.csv'
+    error_file = '../../Dataset/error_log.txt'
+    pkl_directory = '../../Dataset'
+
+    # Input for monitor execution
+    num_obs = 1000  # maximum number of observations
+    interval = 1  # Seconds in between two observations
+
     main_monitor(csv_file, num_obs, interval)
 
     #Check any errors/warnings reported in the error_log.txt file
@@ -181,3 +194,6 @@ if __name__ == "__main__":
         print('While running the monitor you encountered the following errors/warnings:')
         for error, count in error_counter.items():
             print(f'{error} - {count}')
+        print('Please check the error_log.txt file for more information.')
+
+    delete_pkl_file(pkl_directory)

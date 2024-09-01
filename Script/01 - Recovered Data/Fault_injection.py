@@ -1,6 +1,7 @@
 # DATA COLLECTION AND MACHINE LEARNING
 # FOR CRITICAL CYBER-PHYSICAL SYSTEMS project
-# Name: Dario
+# Name: Dario Gangemi
+# Student ID: 7062188
 # A.A: 2023/2024
 
 import time
@@ -26,7 +27,9 @@ def log_error(message: str, error_filename: str = error_file):
 def simulate_fault():
     """
     Function to simulate a fault in the system.
-    This could be CPU load spike and memory saturation.
+
+    This could indicate system stress due to various factors, such as CPU load spikes, abnormal CPU statistics,
+    memory saturation (both swap and virtual), high disk usage, intense disk I/O operations, or heavy network traffic.
     """
     fault_type = random.choice(['cpu_times',
                                 'cpu_stats',
@@ -40,19 +43,19 @@ def simulate_fault():
     # Simulate faults for CPU Times
     if fault_type == 'cpu_times':
         log_error("FAULT INJECTION: CPU Times spike!")
-        end_time = time.time() + 10
+        end_time = time.time() + random.randint(2, 20)
         while time.time() < end_time:
             pass
 
     # Simulate faults for CPU Stats
     elif fault_type == 'cpu_stats':
         log_error("FAULT INJECTION: CPU Stats anomaly!")
-        time.sleep(10)
+        time.sleep(random.randint(2, 20))
 
     # Simulate faults for CPU Load
     elif fault_type == 'cpu_load':
         log_error("FAULT INJECTION: CPU Load spike!")
-        end_time = time.time() + 10
+        end_time = time.time() + random.randint(2, 20)
         while time.time() < end_time:
             pass
 
@@ -61,8 +64,8 @@ def simulate_fault():
         log_error("FAULT INJECTION: Swap Memory exhaustion!")
         a = []
         for _ in range(10 ** 6):
-            a.append(' ' * 2048)
-        time.sleep(10)
+            a.append(' ' * 1024) #Simulation of the allocation of an empty string of 1 MB
+        time.sleep(random.randint(2, 20))
         del a
 
     # Simulate faults for Virtual Memory
@@ -70,25 +73,25 @@ def simulate_fault():
         log_error("FAULT INJECTION: Virtual Memory saturation!")
         a = []
         for _ in range(10 ** 6):
-            a.append(' ' * 2048)
-        time.sleep(10)
+            a.append(' ' * 1024) #Simulation of the allocation of an empty string of 1 MB
+        time.sleep(random.randint(2, 20))
         del a
 
     # Simulate faults for Disk Usage
     elif fault_type == 'disk_usage':
         log_error("FAULT INJECTION: Disk Usage increase!")
         with open('temp_disk_usage.dat', 'wb') as f:
-            f.write(os.urandom(2048 * 2048 * 200))  # Write 100 MB of random data
-        time.sleep(10)
+            f.write(os.urandom(1024 * 1024 * 1024))  # Write 1 GB of random data
+        time.sleep(random.randint(2, 20))
         os.remove('temp_disk_usage.dat')
 
     # Simulate faults for Disk IO
     elif fault_type == 'disk_io':
         log_error("FAULT INJECTION: Disk IO load!")
         with open('temp_disk_io.dat', 'wb') as f:
-            f.write(os.urandom(2048 * 2048 * 200))  # Write 100 MB of random data
+            f.write(os.urandom(1024 * 1024 * 1024))  # Write 1 GB of random data
         with open('temp_disk_io.dat', 'rb') as f:
-            while f.read(2048 * 2048):  # Read the file in 2 MB chunks
+            while f.read(1024 * 1024 * 500):  # Read the file in 500 MB chunks
                 pass
         os.remove('temp_disk_io.dat')
 
@@ -97,5 +100,5 @@ def simulate_fault():
         log_error("FAULT INJECTION: Net IO stress!")
         # Simulate network stress by performing a large data transfer
         with open('temp_net_io.dat', 'wb') as f:
-            f.write(os.urandom(2048 * 2048 * 200))  # Write 100 (...200) MB of random data
+            f.write(os.urandom(1024 * 1024 * 1024))  # Write 1 GB of random data
         os.remove('temp_net_io.dat')
